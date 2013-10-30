@@ -3,6 +3,7 @@ package bzzzt02.global;
 import java.util.Iterator;
 import java.util.List;
 import android.content.Intent;
+import android.util.Log;
 
 import bzzzt02.participants.Participant;
 
@@ -22,7 +23,8 @@ public class DisplayHelper {
 	}
 	
 	public static void log(String tag, Object o) {
-		System.out.println(tag + ": " + String.valueOf(o));
+		Log.v(tag,String.valueOf(o));
+		//System.out.println(tag + ": " + String.valueOf(o));
 	}
 	
 	public static void displayTPList(String TAG, List<Participant> listtp) {
