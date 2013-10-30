@@ -25,6 +25,7 @@ public class Orientation extends BzzztSensor {
 	private BufferedWriter bwriter;
 	String prefixTPFile;
 	private List<String> errors;
+	private boolean finished = false;
 	
 	public Orientation(String prefixTPFile, SensorManager sm){
 		super.initParams();
@@ -35,7 +36,9 @@ public class Orientation extends BzzztSensor {
 	public int getSampleIndex(){
 		return indexSample;
 	}
-	
+	public boolean checkFinished(){
+		return finished;
+	}
 	public void initParams() {
 		errors  = new ArrayList<String>();
 		bwriter = null;

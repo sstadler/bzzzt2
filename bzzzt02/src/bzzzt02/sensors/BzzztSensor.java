@@ -36,6 +36,7 @@ public abstract class BzzztSensor {
 	public abstract List<Participant> getTPInfoList();
 	public abstract int getSampleIndex();
 	public abstract void resetSampleIndex();
+	public abstract boolean checkFinished();
 	
 	public BzzztSensor(){
 		initParams();

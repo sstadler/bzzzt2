@@ -5,13 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import android.content.Context;
 import android.hardware.Sensor;
-//import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 import bzzzt02.config.ConfigData;
 import bzzzt02.global.Constants;
 import bzzzt02.global.DisplayHelper;
@@ -32,6 +30,8 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	private Sensor mAccelerometer;
 	private float mLastX, mLastY, mLastZ;
 	private boolean mInitialized;
+	private int cntEntries = 0;
+	private boolean finished = false;
 	
 	public Accelerometer(){
 		super.initParams();
@@ -47,29 +47,35 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 		mAccelerometer = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mInitialized = false;
-		mSensorManager.registerListener(this, mAccelerometer,
-				SensorManager.SENSOR_DELAY_NORMAL);
 		System.out.println("INIT ACCELEROMETER "+this.prefixTPFile);
 	}
 	
 	public int getSampleIndex(){
 		return indexSample;
 	}
+	
+	public boolean checkFinished(){
+		return finished;
+	}
 
 	public void initParams() {
 		errors = new ArrayList<String>();
 		bwriter = null;
 		indexSample = 0;
-		
 	}
 
 	@Override
 	public void createNopenFile() {
 		String fname = ParticipantHelper.generateFileName(prefixTPFile,Constants.sensor_abb_Accelerometer, indexSample);
 		currFile = createFile(fname);
-		bwriter = openFile(currFile);
+		bwriter  = openFile(currFile);
+		finished = false;
+		cntEntries = 0;
 		writeHaeder();
 		indexSample++;
+		boolean regei = mSensorManager.registerListener(this, mAccelerometer,
+				SensorManager.SENSOR_DELAY_NORMAL);
+		Log.d(TAG, "acc reg "+regei);
 	}
 
 	@Override
@@ -91,6 +97,7 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 
 	public void writeData(float x, float y, float z) {
 		try {
+			Log.d(TAG,"iwrite");
 			bwriter.append(x + ";" + y + ";" + z + "\n");
 		} catch (IOException e) {
 			errors.add("IOExeption in writeAccData: " + e.getMessage());
@@ -102,6 +109,7 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	@Override
 	public void closeFile() {
 		System.out.println("file closed: " + currFile.getAbsolutePath());
+		mSensorManager.unregisterListener(this);
 		try {
 			bwriter.close();
 			if (indexSample % super.maxNumSamples == 0) {
@@ -131,7 +139,17 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		// TODO Auto-generated method stub
+		float x = event.values[0];
+		float y = event.values[1];
+		float z = event.values[2];
+		Log.d(TAG, x+" "+y+" "+z);
+		writeData(x, y, z);
+		cntEntries++;
+		Log.d(TAG, "cntEnt: "+cntEntries);
+		if(cntEntries==50){
+			finished = true;
+			Log.d(TAG, "finished true");
+		}
 		
 	}
 }
