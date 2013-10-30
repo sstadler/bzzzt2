@@ -25,6 +25,7 @@ public class RecordingService extends Service{
 	private File externalStorageDir = Environment.getExternalStorageDirectory();
 	private String downloadDir; 
 	private ConfigData config;
+	boolean finished = false;
 	
 	@Override
 	public void onCreate() {
@@ -46,30 +47,49 @@ public class RecordingService extends Service{
 		
 		if(intent.getAction().equals("startRecording")){
 			tp.sensors.get(Constants.sensor_Accelerometer).createNopenFile();
-			Intent itn;
-			int sampleIndex = tp.sensors.get(Constants.sensor_Accelerometer).getSampleIndex();
-			if(sampleIndex<= maxSamples){
-				itn = new Intent("AccData");
-				tp.sensors.get(Constants.sensor_Accelerometer).writeData(3.3f, 4.4f, 5.5f);
-				itn.putExtra("x", 3.3f);
-				itn.putExtra("y", 4.4f);
-				itn.putExtra("z", 5.5f);
-				sendBroadcast(itn);
-				tp.sensors.get(Constants.sensor_Accelerometer).closeFile();
-				Log.d(TAG,"sampleindex: "+sampleIndex);
-				Log.d(TAG,"maxSampls:   "+maxSamples);
-				if(sampleIndex< maxSamples){
-					itn = new Intent("startActivityRecording");
-					itn = IntentHelper.addTPInfo2Intent(itn, Integer.toString(tp.indexTP), Integer.toString(sampleIndex+1));
-				}
-				if(sampleIndex==maxSamples){
-					tp.sensors.get(Constants.sensor_Accelerometer).resetSampleIndex();
-					itn= new Intent("startActivityEndTurn");
-					IntentHelper.addTPInfo2Intent(itn, Integer.toString(tp.indexTP), Integer.toString(sampleIndex));
-				}		
-			}
-			else{itn= new Intent("startActivityEndTurn");}
-			sendBroadcast(itn);
+
+			Thread fin = new Thread(new Runnable(){
+				    public void run() {
+				    // TODO Auto-generated method stub
+				    while(!finished)
+				    {
+				       try {
+						Thread.sleep(500);
+						Log.d(TAG, "finished: "+finished);
+						finished = tp.sensors.get(Constants.sensor_Accelerometer).checkFinished();
+
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				       //REST OF CODE HERE//
+				    }
+				    int sampleIndex = tp.sensors.get(Constants.sensor_Accelerometer).getSampleIndex();
+				    Intent itn = new Intent();
+					if(sampleIndex<= maxSamples){
+						if(finished){
+							tp.sensors.get(Constants.sensor_Accelerometer).closeFile();
+							Log.d(TAG,"sampleindex: "+sampleIndex);
+							Log.d(TAG,"maxSampls:   "+maxSamples);
+							if(sampleIndex< maxSamples){
+								itn = new Intent("startActivityRecording");
+								itn = IntentHelper.addTPInfo2Intent(itn, Integer.toString(tp.indexTP), Integer.toString(sampleIndex+1));
+							}
+							if(sampleIndex==maxSamples){
+								tp.sensors.get(Constants.sensor_Accelerometer).resetSampleIndex();
+								itn= new Intent("startActivityEndTurn");
+								IntentHelper.addTPInfo2Intent(itn, Integer.toString(tp.indexTP), Integer.toString(sampleIndex));
+							}
+						}	
+					}
+					else{itn= new Intent("startActivityEndTurn");}
+					sendBroadcast(itn);
+					finished = false;
+
+				                    }
+				});
+			fin.start();
+
 		}
 		 
 		return START_STICKY;
