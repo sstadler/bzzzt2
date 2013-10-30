@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="bzzzt02.global"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="9" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.NETWORK" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="bzzzt02.activities.Bzzzt02"
+            android:label="Bzzzt02 - Home" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="bzzzt02.activities.NewTurn"
+            android:label="Bzzzt02 - Train" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+            </intent-filter>
+        </activity>
+                <activity
+            android:name="bzzzt02.activities.StartRecord"          
+             android:label="Bzzzt02 - Train" >
+
+        </activity>
+               
+                <activity
+            android:name="bzzzt02.activities.BzzztTimer"    
+             android:label="Bzzzt02 - Train" >
+
+        </activity>
+        <activity
+            android:name="bzzzt02.activities.Recording"
+            android:label="Bzzzt02 - Train" >
+
+        </activity>
+                        <activity
+            android:name="bzzzt02.activities.EndTurn"
+             android:label="Bzzzt02 - Train" >
+
+        </activity>
+        <activity
+            android:name="bzzzt02.infos.SensorList"
+            android:label="@string/app_name" >
+        </activity>
+        <service android:name="bzzzt02.services.RecordingService">
+            <intent-filter>
+                 <action android:name="NEWTP" />
+                 <action android:name="startRecording" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

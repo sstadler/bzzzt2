@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tv_train"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="21dp"
+        android:layout_y="32dp"
+        android:text="Train: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tv_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="26dp"
+        android:layout_y="82dp"
+        android:text="age"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tv_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="173dp"
+        android:layout_y="86dp"
+        android:text="gender"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Spinner
+        android:id="@+id/sp_gender"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_x="167dp"
+        android:layout_y="112dp"
+        android:entries="@array/gender_arrays" />
+
+    <EditText
+        android:id="@+id/edt_age"
+        android:layout_width="88dp"
+        android:layout_height="wrap_content"
+        android:layout_x="27dp"
+        android:layout_y="115dp"
+        android:ems="10"
+        android:inputType="number" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_newTurn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="32dp"
+        android:layout_y="178dp"
+        android:onClick="btn_newTurn"
+        android:text="new Turn" />
+
+</AbsoluteLayout>
