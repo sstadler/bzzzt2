@@ -78,6 +78,7 @@ public class ParticipantHelper {
 		Participant tpx = null;
 		int acc = 0;
 		int ori = 0;
+		int rot = 0;
 		for (int i = 0; i < flist.length; i++) {
 			Matcher matcher = pattern.matcher(flist[i].trim());
 			if (matcher.matches()) {
@@ -93,6 +94,9 @@ public class ParticipantHelper {
 						if(matcher.group(5).matches(Constants.sensor_abb_Orientation)){
 							ori++;
 						}
+						if(matcher.group(5).matches(Constants.sensor_abb_Rotation)){
+							rot++;
+						}
 						   if(i==flist.length-1){
 							   Participant help = tpx;
 								if(acc!=0){
@@ -101,6 +105,10 @@ public class ParticipantHelper {
 								}
 								if(ori!=0){
 									tpx.addSensorSampleCount(Constants.sensor_Orientation, ori);
+									ori=0;
+								}
+								if(rot!=0){
+									tpx.addSensorSampleCount(Constants.sensor_Rotation, rot);
 									ori=0;
 								}
 								tpx=null;
@@ -116,6 +124,10 @@ public class ParticipantHelper {
 							if(ori!=0){
 								tpx.addSensorSampleCount(Constants.sensor_Orientation, ori);
 								ori=0;
+							}
+							if(rot!=0){
+								tpx.addSensorSampleCount(Constants.sensor_Rotation, rot);
+								rot=0;
 							}
 							tpx=null;
 							return help;
@@ -152,7 +164,6 @@ public class ParticipantHelper {
 		List<Participant> tlist = new ArrayList<Participant>();
 		
 		String sensorAbb = SensorHelper.getSenorAbb(sensorName);
-		System.out.println("---------------"+sensorAbb);
 
 		for (int i = 0; i < flist.length; i++) {
 			Matcher matcher = pattern.matcher(flist[i].trim());

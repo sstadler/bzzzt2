@@ -82,6 +82,9 @@ public class ConfigData {
 	public String getTPSamplePath(){
 		return getValue(Constants.config_TPFOLDERPATH).toString();
 	}
+	public int getWaitInSec(){
+		return Integer.valueOf(getValue(Constants.config_WAITINSEC).toString());
+	}
 
 	private void displayErrorList() {
 		Iterator<String> i = errors.iterator();
@@ -137,7 +140,7 @@ public class ConfigData {
 		scanner.useDelimiter("=");
 		if (scanner.hasNext()) {
 			String name = scanner.next().trim();
-			String val = scanner.next().trim();
+			String val  = scanner.next().trim();
 			lstConfigObjects.add(new ConfigObject(name, val));
 
 		} else {
@@ -156,9 +159,9 @@ public class ConfigData {
 		}
 	}
 
-//	public static void main(String[] args) {
-//		ConfigData cdata = ConfigData.getInstance();
-//		cdata.loadConfig("/tmp/bzzzt.config");
-//	}
+	public static void main(String[] args) {
+		ConfigData cdata = ConfigData.getInstance();
+		cdata.loadConfig("/tmp/bzzzt.config");
+	}
 
 }

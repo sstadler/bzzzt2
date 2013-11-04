@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -32,6 +34,9 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	private boolean mInitialized;
 	private int cntEntries = 0;
 	private boolean finished = false;
+	private boolean movement = false;
+	private boolean sensorStarted = false;
+	private LinkedList<AccData> hold = new LinkedList();
 	
 	public Accelerometer(){
 		super.initParams();
@@ -47,6 +52,12 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 		mAccelerometer = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mInitialized = false;
+		List slist = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+		Iterator it = slist.iterator();
+		while(it.hasNext()){
+			Sensor sen = (Sensor)it.next();
+			System.out.println("Rottatin. "+sen.getName()+": "+sen.getType());
+		}
 		System.out.println("INIT ACCELEROMETER "+this.prefixTPFile);
 	}
 	
@@ -62,6 +73,9 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 		errors = new ArrayList<String>();
 		bwriter = null;
 		indexSample = 0;
+		mLastX = 0.0f;
+		mLastY = 0.0f;
+		mLastZ = 0.0f;
 	}
 
 	@Override
@@ -73,10 +87,9 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 		cntEntries = 0;
 		writeHaeder();
 		indexSample++;
-		boolean regei = mSensorManager.registerListener(this, mAccelerometer,
-				SensorManager.SENSOR_DELAY_NORMAL);
-		Log.d(TAG, "acc reg "+regei);
+		startRecord();
 	}
+	
 
 	@Override
 	public void writeHaeder() {
@@ -143,13 +156,52 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 		float y = event.values[1];
 		float z = event.values[2];
 		Log.d(TAG, x+" "+y+" "+z);
+		final float alpha = 0.8f;
+		AccData ac = new AccData(event.values);
 		writeData(x, y, z);
+		hold.add(ac);
+		
+		mLastX = x;
+		mLastY = y;
+		mLastZ = z;
 		cntEntries++;
 		Log.d(TAG, "cntEnt: "+cntEntries);
-		if(cntEntries==50){
-			finished = true;
-			Log.d(TAG, "finished true");
+		if(hold.size()==5){
+			Iterator i = hold.listIterator();
+			while(i.hasNext()){
+				AccData ad = (AccData)i.next();
+				Log.d(TAG,"AccData Z: "+ad.getZ());
+			}
+			hold.removeFirst();
+		}
+		if(cntEntries==10){
+			movement = true;
+			Log.d(TAG, "movement true");
 		}
 		
+	}
+	public void startRecord(){
+		Log.d(TAG, "startRecord");
+		finished=false;
+		sensorStarted = mSensorManager.registerListener(this, mAccelerometer,
+				SensorManager.SENSOR_DELAY_NORMAL);
+
+		
+	}
+	public void stopRecord(){
+		finished=true;
+		mSensorManager.unregisterListener(this);
+		Log.d(TAG, "stopRecord");
+	}
+
+	@Override
+	public String[] getSensorValues() {
+		String[] a = {String.valueOf(mLastX), String.valueOf(mLastY), String.valueOf(mLastZ)};
+		return a;
+	}
+
+	@Override
+	public boolean checkMovement() {
+		return movement;
 	}
 }

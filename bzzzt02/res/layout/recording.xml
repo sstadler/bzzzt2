@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_x="91dp"
         android:layout_y="108dp"
-        android:text="Large Text"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_x="165dp"
         android:layout_y="74dp"
-        android:text="Medium Text"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -57,5 +57,69 @@
         android:text="Recording"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
+    <Button
+        android:id="@+id/btn_stopRecording"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="70dp"
+        android:layout_y="260dp"
+        android:onClick="btn_stopRecording"
+        android:text="Stop Recording" />
+
+    <TextView
+        android:id="@+id/tv_labelaccdata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="20dp"
+        android:layout_y="150dp"
+        android:text="accelerometer" />
+
+    <TextView
+        android:id="@+id/tv_labelx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="120dp"
+        android:layout_y="150dp"
+        android:text="x:" />
+
+    <TextView
+        android:id="@+id/tv_labely"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="120dp"
+        android:layout_y="165dp"
+        android:text="y:" />
+
+    <TextView
+        android:id="@+id/tv_labelz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="120dp"
+        android:layout_y="180dp"
+        android:text="z:" />
+
+    <TextView
+        android:id="@+id/tv_x"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="140dp"
+        android:layout_y="150dp"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/tv_y"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="140dp"
+        android:layout_y="165dp"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/tv_z"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="140dp"
+        android:layout_y="180dp"
+        android:text="" />
 
 </AbsoluteLayout>

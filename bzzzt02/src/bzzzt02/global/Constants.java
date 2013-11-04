@@ -6,6 +6,7 @@ public class Constants {
 	public static final String config_TPFOLDERPATH     = "tpFolderPath";
 	public static final String config_FILEPREFIX       = "filePrefix";
 	public static final String config_MAXNUMBERSAMPLES = "maxNumberSamples";
+	public static final String config_WAITINSEC        = "waitInSec";
 	
 	public static final String regex_true       = "true";
 	public static final String regex_false      = "false";
@@ -15,9 +16,11 @@ public class Constants {
 	
 	public static final String sensor_Accelerometer = "ACCELEROMETER";
 	public static final String sensor_Orientation   = "ORIENTATION";
+	public static final String sensor_Rotation      = "ROTATION";
 	
 	public static final String sensor_abb_Accelerometer = "ad";
 	public static final String sensor_abb_Orientation   = "od";
+	public static final String sensor_abb_Rotation      = "rd";
 	
 	public static final String extra_TPindex     = "TPINDEX";
 	public static final String extra_SAMPLEindex = "SAMPLEINDEX";

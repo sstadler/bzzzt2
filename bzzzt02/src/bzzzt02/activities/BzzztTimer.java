@@ -23,10 +23,12 @@ public class BzzztTimer extends Activity {
 	private String downloadDir;
 	private ConfigData config;
 	private int maxSamples;
+	private int waitInSec;
 	
 	public void initParams(){
 		tpIndex = "";
 		sampleIndex = "";
+		waitInSec = 15;
 		loadConfig();
 		maxSamples = config.getMaxNumberSample();
 	}
@@ -36,7 +38,8 @@ public class BzzztTimer extends Activity {
 		setContentView(R.layout.bzzzttimer);
 		initParams();
 		tv_timer = (TextView) findViewById(R.id.tv_timer);
-		tv_timer.setText("15");
+		waitInSec = config.getWaitInSec();
+		tv_timer.setText(Integer.toString(waitInSec));
 
 		tv_tpIndex = (TextView) findViewById(R.id.tv_tpindex);
 		tv_sampleIndex = (TextView) findViewById(R.id.tv_sampleindex);
@@ -54,7 +57,7 @@ public class BzzztTimer extends Activity {
 		tv_tpIndex.setText(tpIndex);
 		tv_sampleIndex.setText(sampleIndex + "/"+Integer.toString(maxSamples));
 
-		new CountDown(15000, 1000).start();
+		new CountDown(waitInSec*1000, 1000, tpIndex, sampleIndex).start();
 	}
 
 	protected void onResume() {
@@ -77,9 +80,14 @@ public class BzzztTimer extends Activity {
 	}
 
 	public class CountDown extends CountDownTimer {
+		
+		String tpIndex = "";
+		String sampleIndex= "";
 
-		public CountDown(long millisec, long interval) {
+		public CountDown(long millisec, long interval, String tpIndex, String sampleIndex) {
 			super(millisec, interval);
+			this.tpIndex = tpIndex;
+			this.sampleIndex = sampleIndex;
 		}
 
 		@Override

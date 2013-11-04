@@ -76,6 +76,9 @@ public class ConfigObject {
 			processed = true;
 		}
 		
+		else if(name.equals(Constants.config_WAITINSEC)){
+			processed = true;
+		}
 		else{
 			errorMsg+=name+" "+val+" not known!!";
 			processed = false;

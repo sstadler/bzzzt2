@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.Environment;
+import android.util.Log;
 import bzzzt02.config.ConfigData;
 import bzzzt02.global.Constants;
 import bzzzt02.global.DisplayHelper;
@@ -19,7 +21,10 @@ import bzzzt02.participants.ParticipantHelper;
 public abstract class BzzztSensor {
 	
 	public static final String TAG="SENSOR";
+	
 	private ConfigData configfile;
+	private File externalStorageDir;
+	private String downloadDir;
 	public File parentFolder;
 	String filePrefix, timeStamp;
 	String gender;
@@ -37,41 +42,26 @@ public abstract class BzzztSensor {
 	public abstract int getSampleIndex();
 	public abstract void resetSampleIndex();
 	public abstract boolean checkFinished();
+	public abstract boolean checkMovement();
+	public abstract void stopRecord();
+	public abstract String[] getSensorValues();
 	
 	public BzzztSensor(){
 		initParams();
 	}
 	
 	public void initParams() {
-		configfile = ConfigData.getInstance();
-		configfile.loadConfig("/mnt/sdcard/Download/bzzzt.config");
-		parentFolder = new File(configfile.getValue(Constants.config_TPFOLDERPATH)
-				.toString());
+        loadConfig();
+        parentFolder = new File(configfile.getTPSamplePath());
 		if(!parentFolder.exists()){parentFolder.mkdir();}
 		filePrefix = configfile.getValue(Constants.config_FILEPREFIX).toString();
 		timeStamp  = "";
 		
-		maxNumSamples = Integer.valueOf(configfile.getValue(Constants.config_MAXNUMBERSAMPLES).toString());
+		maxNumSamples = Integer.valueOf(configfile.getMaxNumberSample());
 		countTP       = ParticipantHelper.getIndexTP(parentFolder); //delete
 		errors        = new ArrayList<String>();
-		System.out.println("inti SENSOR");
+		Log.d(TAG,"inti SENSOR");
 	}
-	
-//	public int getCountTP() {
-//		String[] flist = parentFolder.list();
-//		Pattern pattern = Pattern.compile(Globals.regex_TPfilename);
-//
-//		int cntTemp = -1;
-//
-//		for (int i = 0; i < flist.length; i++) {
-//			Matcher matcher = pattern.matcher(flist[i].trim());
-//			if (matcher.matches()) {
-//				cntTemp = Math.max(cntTemp, Integer.valueOf(matcher.group(2)));
-//			}
-//		}
-//		return cntTemp+1;
-//	}
-	
 
 	public File createFile(String filename) {
 
@@ -106,6 +96,15 @@ public abstract class BzzztSensor {
 			}
 			
 			return bwriter;
+	}
+	
+	private void loadConfig(){
+		externalStorageDir = Environment.getExternalStorageDirectory();
+		downloadDir = "/Download/bzzzt.config";
+		configfile = ConfigData.getInstance();
+		if(!configfile.loaded){
+			configfile.loadConfig(externalStorageDir.getAbsoluteFile() + downloadDir);
+		}
 	}
 	
 

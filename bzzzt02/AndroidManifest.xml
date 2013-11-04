@@ -63,6 +63,7 @@
             <intent-filter>
                  <action android:name="NEWTP" />
                  <action android:name="startRecording" />
+                 <action android:name="stopRecording" />
             </intent-filter>
         </service>
     </application>

@@ -11,6 +11,8 @@ import android.app.Service;
 
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 
 import android.os.Environment;
@@ -26,6 +28,8 @@ public class RecordingService extends Service{
 	private String downloadDir; 
 	private ConfigData config;
 	boolean finished = false;
+	boolean movement = false;
+	boolean vib = false;
 	
 	@Override
 	public void onCreate() {
@@ -41,13 +45,19 @@ public class RecordingService extends Service{
 		if(intent.getAction().equals(Constants.extra_NEWTP)){
 			tp = (Participant)intent.getParcelableExtra(Constants.extra_PARTICIPANT);
 			
-			tp.initSensor(Constants.sensor_Accelerometer, (SensorManager) getSystemService(Context.SENSOR_SERVICE));
+			SensorManager sm = (SensorManager)getSystemService(SENSOR_SERVICE);
+			System.out.println("SENSORMAGER: "+(sm!=null));
+			tp.initSensor(Constants.sensor_Accelerometer, sm);
+			tp.initSensor(Constants.sensor_Rotation, sm);
+			
+			Log.w(TAG,tp.sensors.toString());
 			Log.d(TAG, "new TP: "+tp.indexTP);
 		}
 		
 		if(intent.getAction().equals("startRecording")){
 			tp.sensors.get(Constants.sensor_Accelerometer).createNopenFile();
-
+			//tp.sensors.get(Constants.sensor_Orientation).createNopenFile();
+			tp.sensors.get(Constants.sensor_Rotation).createNopenFile();
 			Thread fin = new Thread(new Runnable(){
 				    public void run() {
 				    // TODO Auto-generated method stub
@@ -57,6 +67,13 @@ public class RecordingService extends Service{
 						Thread.sleep(500);
 						Log.d(TAG, "finished: "+finished);
 						finished = tp.sensors.get(Constants.sensor_Accelerometer).checkFinished();
+						movement = tp.sensors.get(Constants.sensor_Accelerometer).checkMovement();
+						if(movement){
+							sendBroadcast(new Intent("stopRinging"));
+							movement=false;
+						}
+						String[] vals = tp.sensors.get(Constants.sensor_Accelerometer).getSensorValues();
+						sendBroadcast(IntentHelper.generateSensorValIntent(Constants.sensor_Accelerometer, vals));
 
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -69,6 +86,7 @@ public class RecordingService extends Service{
 					if(sampleIndex<= maxSamples){
 						if(finished){
 							tp.sensors.get(Constants.sensor_Accelerometer).closeFile();
+							tp.sensors.get(Constants.sensor_Rotation).closeFile();
 							Log.d(TAG,"sampleindex: "+sampleIndex);
 							Log.d(TAG,"maxSampls:   "+maxSamples);
 							if(sampleIndex< maxSamples){
@@ -90,6 +108,12 @@ public class RecordingService extends Service{
 				});
 			fin.start();
 
+		}
+		
+		if(intent.getAction().equals("stopRecording")){
+			Log.d(TAG,"in STop recording");
+			tp.sensors.get(Constants.sensor_Accelerometer).stopRecord();
+			tp.sensors.get(Constants.sensor_Rotation).stopRecord();
 		}
 		 
 		return START_STICKY;

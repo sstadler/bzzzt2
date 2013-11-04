@@ -7,7 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 import bzzzt02.config.ConfigData;
 import bzzzt02.global.Constants;
 import bzzzt02.global.DisplayHelper;
@@ -18,7 +23,7 @@ import bzzzt02.participants.ParticipantHelper;
 
 
 
-public class Orientation extends BzzztSensor {
+public class Orientation extends BzzztSensor implements SensorEventListener {
 	public static final String TAG = Constants.sensor_Orientation;
 	private File currFile;
 	private int indexSample;
@@ -26,11 +31,18 @@ public class Orientation extends BzzztSensor {
 	String prefixTPFile;
 	private List<String> errors;
 	private boolean finished = false;
+	private boolean movement = false;
+	private SensorManager mSensorManager;
+	private Sensor mOrientation;
+	private boolean mInitialized;
+	private int cntEntries = 0;
+	private boolean sensorStarted = false;
 	
 	public Orientation(String prefixTPFile, SensorManager sm){
 		super.initParams();
 		initParams();
 		this.prefixTPFile = prefixTPFile;
+		this.mSensorManager = sm;
 		System.out.println("INIT ORIENTATION");
 	}
 	public int getSampleIndex(){
@@ -38,6 +50,9 @@ public class Orientation extends BzzztSensor {
 	}
 	public boolean checkFinished(){
 		return finished;
+	}
+	public boolean checkMovement(){
+		return movement;
 	}
 	public void initParams() {
 		errors  = new ArrayList<String>();
@@ -52,6 +67,11 @@ public class Orientation extends BzzztSensor {
 		bwriter = openFile(currFile);
 		writeHaeder();
 		indexSample++;
+		mOrientation = mSensorManager
+				.getDefaultSensor(SensorManager.SENSOR_ORIENTATION);
+		mInitialized = false;
+		startRecord();
+		System.out.println("INIT Orientation "+this.prefixTPFile);
 		
 	}
 
@@ -81,7 +101,6 @@ public class Orientation extends BzzztSensor {
 		} finally {
 			DisplayHelper.displayErrorList(TAG, errors);
 		}
-		
 	}
 
 	@Override
@@ -98,7 +117,6 @@ public class Orientation extends BzzztSensor {
 			System.out.println("file closed: " + currFile.getAbsolutePath());
 			DisplayHelper.displayErrorList(TAG, errors);
 		}
-		
 	}
 
 	@Override
@@ -109,6 +127,37 @@ public class Orientation extends BzzztSensor {
 	
 	public void resetSampleIndex(){
 		indexSample = 0;
+	}
+	
+	public void startRecord(){
+		Log.d(TAG, "startRecord");
+		sensorStarted = mSensorManager.registerListener(this, mOrientation,
+				SensorManager.SENSOR_DELAY_NORMAL);
+		
+	}
+	public void stopRecord(){
+		mSensorManager.unregisterListener(this);
+		Log.d(TAG, "stopRecord");
+	}
+	@Override
+	public void onAccuracyChanged(Sensor sensor, int accuracy) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		System.out.println("Rotation size" + event.values.length);
+		for (int i=0; i<event.values.length;i++){
+			System.out.println("eventOrientateion " + event.values[i]);
+		}
+		
+		
+		
+	}
+	@Override
+	public String[] getSensorValues() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
