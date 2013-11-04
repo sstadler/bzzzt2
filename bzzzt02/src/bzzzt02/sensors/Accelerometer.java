@@ -20,45 +20,60 @@ import bzzzt02.participants.ParticipantHelper;
 
 public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	public static final String TAG = Constants.sensor_Accelerometer;
-
-	private File currFile;
+	
+	public static final int RAW            = 0;
+	public static final int LINEAR         = 1;
+	public static final int RAW_AND_LINEAR = 2;
+	
+	private int type;
+	private File currFileACCR, currFileACCL;
 	public int indexSample;
-	private BufferedWriter bwriter;
+	private BufferedWriter bwriterACCR, bwriterACCL;
 	String prefixTPFile;
 
 	private List<String> errors;
 	
 	private SensorManager mSensorManager;
-	private Sensor mAccelerometer;
+	private Sensor mAccelerometer, mAccelerometerLinear;
 	private float mLastX, mLastY, mLastZ;
-	private boolean mInitialized;
 	private int cntEntries = 0;
 	private boolean finished = false;
 	private boolean movement = false;
-	private boolean sensorStarted = false;
 	private LinkedList<AccData> hold = new LinkedList();
 	
 	public Accelerometer(){
 		super.initParams();
 		initParams();
-		System.out.println("INIT ACCELEROMETER");
 	}
 	
-	public Accelerometer(String prefixTPFile, SensorManager sm){
+	public Accelerometer(String prefixTPFile, SensorManager sm, int type){
 		super.initParams();
 		initParams();
 		this.prefixTPFile = prefixTPFile;
 		this.mSensorManager = sm;
-		mAccelerometer = mSensorManager
-				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mInitialized = false;
-		List slist = mSensorManager.getSensorList(Sensor.TYPE_ALL);
-		Iterator it = slist.iterator();
-		while(it.hasNext()){
-			Sensor sen = (Sensor)it.next();
-			System.out.println("Rottatin. "+sen.getName()+": "+sen.getType());
+		this.type = type;
+		switch (type) {
+		case RAW:
+			mAccelerometer = mSensorManager
+					.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			bwriterACCR = null;
+			break;
+		case LINEAR:
+			mAccelerometerLinear = mSensorManager
+					.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+			bwriterACCL = null;
+			break;
+		case RAW_AND_LINEAR:
+			mAccelerometer = mSensorManager
+					.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+			mAccelerometerLinear = mSensorManager
+					.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+			bwriterACCR = null;
+			bwriterACCL = null;
+			break;
 		}
-		System.out.println("INIT ACCELEROMETER "+this.prefixTPFile);
+		SensorHelper.showSensorList(sm);
+		Log.d(TAG, "... init ");
 	}
 	
 	public int getSampleIndex(){
@@ -71,7 +86,6 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 
 	public void initParams() {
 		errors = new ArrayList<String>();
-		bwriter = null;
 		indexSample = 0;
 		mLastX = 0.0f;
 		mLastY = 0.0f;
@@ -80,23 +94,57 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 
 	@Override
 	public void createNopenFile() {
-		String fname = ParticipantHelper.generateFileName(prefixTPFile,Constants.sensor_abb_Accelerometer, indexSample);
-		currFile = createFile(fname);
-		bwriter  = openFile(currFile);
+		String fname = "";
+		switch(type){
+		case RAW:
+			fname = ParticipantHelper.generateFileName(prefixTPFile,Constants.sensor_abb_Accelerometer_raw, indexSample);
+			currFileACCR = createFile(fname);
+			bwriterACCR  = openFile(currFileACCR);
+			break;
+		case LINEAR:
+			fname = ParticipantHelper.generateFileName(prefixTPFile,Constants.sensor_abb_Accelerometer_linar, indexSample);
+			currFileACCL = createFile(fname);
+			bwriterACCL  = openFile(currFileACCL);
+			break;
+		case RAW_AND_LINEAR:
+			fname = ParticipantHelper.generateFileName(prefixTPFile,Constants.sensor_abb_Accelerometer_raw, indexSample);
+			currFileACCR = createFile(fname);
+			bwriterACCR  = openFile(currFileACCR);
+			
+			fname = ParticipantHelper.generateFileName(prefixTPFile,Constants.sensor_abb_Accelerometer_linar, indexSample);
+			currFileACCL = createFile(fname);
+			bwriterACCL  = openFile(currFileACCL);
+		}
+
 		finished = false;
 		cntEntries = 0;
 		writeHaeder();
 		indexSample++;
 		startRecord();
 	}
-	
 
 	@Override
 	public void writeHaeder() {
+		String header = "";
 		try {
-			bwriter.append("// " + currFile.getAbsolutePath() + "\n");
-			bwriter.append("// timestamp: " + ParticipantHelper.getTimeStamp() + "\n");
-			bwriter.append("// accelerometer data is arranged x;y;z" + "\n");
+			switch (type){
+			case RAW:
+				header = SensorHelper.generateHeaderString(currFileACCR.getAbsolutePath(), "accelerometer_raw");
+				bwriterACCR.append(header);
+				break;
+			case LINEAR:
+				header = SensorHelper.generateHeaderString(currFileACCL.getAbsolutePath(), "accelerometer_linear");
+				bwriterACCL.append(header);
+				break;
+			case RAW_AND_LINEAR:
+				header = SensorHelper.generateHeaderString(currFileACCR.getAbsolutePath(),"accelerometer_raw");
+				bwriterACCR.append(header);
+				
+				header = SensorHelper.generateHeaderString(currFileACCL.getAbsolutePath(), "accelerometer_linear");
+				bwriterACCL.append(header);
+				break;
+			}
+			
 		} catch (IOException e) {
 			errors.add("IOExeption in write Header: " + e.getMessage());
 		} catch (NullPointerException e) {
@@ -109,9 +157,40 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 
 
 	public void writeData(float x, float y, float z) {
+//		try {
+//			String tsp = ParticipantHelper.getTimeStamp();
+//			switch(type){
+//			case RAW:
+//				bwriterACCR.append(tsp+";"+x + ";" + y + ";" + z + "\n");
+//				break;
+//			case LINEAR:
+//				bwriterACCL.append(tsp+";"+x + ";" + y + ";" + z + "\n");
+//				break;
+//			case RAW_AND_LINEAR:
+//				bwriterACCR.append(tsp+";"+x + ";" + y + ";" + z + "\n");
+//				bwriterACCL.append(tsp+";"+x + ";" + y + ";" + z + "\n");
+//				break;
+//			}
+//			
+//		} catch (IOException e) {
+//			errors.add("IOExeption in writeAccData: " + e.getMessage());
+//		} finally {
+//			DisplayHelper.displayErrorList(TAG, errors);
+//		}
+	}
+	
+	public void writeData(float[] values, int type){
 		try {
-			Log.d(TAG,"iwrite");
-			bwriter.append(x + ";" + y + ";" + z + "\n");
+			String tsp = ParticipantHelper.getTimeStamp();
+			switch(type){
+			case RAW:
+				bwriterACCR.append(tsp+";"+values[0] + ";" + values[1] + ";" + values[2] + "\n");
+				break;
+			case LINEAR:
+				bwriterACCL.append(tsp+";"+values[0] + ";" + values[1] + ";" + values[2] + "\n");
+				break;
+			}
+			
 		} catch (IOException e) {
 			errors.add("IOExeption in writeAccData: " + e.getMessage());
 		} finally {
@@ -121,10 +200,21 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 
 	@Override
 	public void closeFile() {
-		System.out.println("file closed: " + currFile.getAbsolutePath());
+		System.out.println("file closed: " + currFileACCR.getAbsolutePath());
 		mSensorManager.unregisterListener(this);
 		try {
-			bwriter.close();
+			switch(type){
+			case RAW:
+				bwriterACCR.close();
+				break;
+			case LINEAR:
+				bwriterACCL.close();
+				break;
+			case RAW_AND_LINEAR:
+				bwriterACCR.close();
+				bwriterACCL.close();
+				break;
+			}
 			if (indexSample % super.maxNumSamples == 0) {
 				super.countTP++;
 			}
@@ -145,49 +235,63 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	}
 
 	@Override
-	public void onAccuracyChanged(android.hardware.Sensor sensor, int accuracy) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onAccuracyChanged(android.hardware.Sensor sensor, int accuracy) {}
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		float x = event.values[0];
 		float y = event.values[1];
 		float z = event.values[2];
-		Log.d(TAG, x+" "+y+" "+z);
-		final float alpha = 0.8f;
-		AccData ac = new AccData(event.values);
-		writeData(x, y, z);
-		hold.add(ac);
 		
-		mLastX = x;
-		mLastY = y;
-		mLastZ = z;
-		cntEntries++;
-		Log.d(TAG, "cntEnt: "+cntEntries);
-		if(hold.size()==5){
-			Iterator i = hold.listIterator();
-			while(i.hasNext()){
-				AccData ad = (AccData)i.next();
-				Log.d(TAG,"AccData Z: "+ad.getZ());
-			}
-			hold.removeFirst();
+		
+		switch(event.sensor.getType()){
+		case Sensor.TYPE_ACCELEROMETER:
+			writeData(event.values, RAW);
+			Log.d(TAG, "raw: "+x+" "+y+" "+z);
+			break;
+		case Sensor.TYPE_LINEAR_ACCELERATION:
+			writeData(event.values, LINEAR);
+			Log.d(TAG,"Linear: "+x+" "+y+" "+z);
+			break;
 		}
-		if(cntEntries==10){
-			movement = true;
-			Log.d(TAG, "movement true");
-		}
+//		AccData ac = new AccData(event.values);
+//		writeData(x, y, z);
+//		hold.add(ac);
+//		
+//		mLastX = x;
+//		mLastY = y;
+//		mLastZ = z;
+//		cntEntries++;
+//		Log.d(TAG, "cntEnt: "+cntEntries);
+//		if(hold.size()==5){
+//			Iterator i = hold.listIterator();
+//			while(i.hasNext()){
+//				AccData ad = (AccData)i.next();
+//				Log.d(TAG,"AccData Z: "+ad.getZ());
+//			}
+//			hold.removeFirst();
+//		}
 		
 	}
 	public void startRecord(){
 		Log.d(TAG, "startRecord");
 		finished=false;
-		sensorStarted = mSensorManager.registerListener(this, mAccelerometer,
+		switch(type){
+		case RAW:
+			mSensorManager.registerListener(this, mAccelerometer,
 				SensorManager.SENSOR_DELAY_NORMAL);
-
-		
+			break;
+		case LINEAR:
+			mSensorManager.registerListener(this, mAccelerometerLinear,
+					SensorManager.SENSOR_DELAY_NORMAL);
+		case RAW_AND_LINEAR:
+			mSensorManager.registerListener(this, mAccelerometer,
+					SensorManager.SENSOR_DELAY_NORMAL);
+			mSensorManager.registerListener(this, mAccelerometerLinear,
+					SensorManager.SENSOR_DELAY_NORMAL);
+		}		
 	}
+	
 	public void stopRecord(){
 		finished=true;
 		mSensorManager.unregisterListener(this);
@@ -203,5 +307,25 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	@Override
 	public boolean checkMovement() {
 		return movement;
+	}
+
+	@Override
+	public void logHoldState() {
+		try {
+			switch(type){
+			case RAW:
+				bwriterACCR.append("//enter Holdstate at: "+ParticipantHelper.getTimeStamp()+"\n");
+			case LINEAR:
+				bwriterACCL.append("//enter Holdstate at: "+ParticipantHelper.getTimeStamp()+"\n");
+			case RAW_AND_LINEAR:
+				bwriterACCR.append("//enter Holdstate at: "+ParticipantHelper.getTimeStamp()+"\n");
+				bwriterACCL.append("//enter Holdstate at: "+ParticipantHelper.getTimeStamp()+"\n");
+			}
+			bwriterACCR.append("//enter Holdstate at: "+ParticipantHelper.getTimeStamp()+"\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -54,17 +54,9 @@
         android:layout_height="wrap_content"
         android:layout_x="87dp"
         android:layout_y="205dp"
-        android:text="Recording"
+        android:text="Recording Hold"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/btn_startRecordingHold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="70dp"
-        android:layout_y="260dp"
-        android:onClick="btn_startRecordingHold"
-        android:text="Start Recording Hold" />
 
     <TextView
         android:id="@+id/tv_labelaccdata"

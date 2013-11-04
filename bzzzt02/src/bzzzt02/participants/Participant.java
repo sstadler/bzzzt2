@@ -45,9 +45,9 @@ public class Participant implements Parcelable {
 		sensors = new HashMap<String, BzzztSensor>();
 	}
 
-	public void initSensor(String sensorType, SensorManager sm) {
+	public void initSensor(String sensorType, SensorManager sm, int sensorSubType) {
 		if (!sensors.containsKey(sensorType)) {
-			sensors.put(sensorType, sf.getSensor(sensorType, prefixTPFile, sm));
+			sensors.put(sensorType, sf.getSensor(sensorType, prefixTPFile, sm, sensorSubType));
 		}
 	}
 

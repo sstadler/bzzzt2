@@ -76,7 +76,8 @@ public class ParticipantHelper {
 		Pattern pattern = Pattern.compile(Constants.regex_TPfilename);
 		
 		Participant tpx = null;
-		int acc = 0;
+		int accr = 0;
+		int accl = 0;
 		int ori = 0;
 		int rot = 0;
 		for (int i = 0; i < flist.length; i++) {
@@ -88,8 +89,11 @@ public class ParticipantHelper {
 							tpx=new Participant(Integer.valueOf(matcher.group(2)), Integer.valueOf(matcher.group(4)), matcher.group(3));
 						    
 						}
-						if(matcher.group(5).matches(Constants.sensor_abb_Accelerometer)){
-							acc++;
+						if(matcher.group(5).matches(Constants.sensor_abb_Accelerometer_raw)){
+							accr++;
+						}
+						if(matcher.group(5).matches(Constants.sensor_abb_Accelerometer_linar)){
+							accl++;
 						}
 						if(matcher.group(5).matches(Constants.sensor_abb_Orientation)){
 							ori++;
@@ -99,9 +103,13 @@ public class ParticipantHelper {
 						}
 						   if(i==flist.length-1){
 							   Participant help = tpx;
-								if(acc!=0){
-									tpx.addSensorSampleCount(Constants.sensor_Accelerometer,acc);
-									acc = 0;
+								if(accr!=0){
+									tpx.addSensorSampleCount(Constants.sensor_Accelerometer,accr);
+									accr = 0;
+								}
+								if(accl!=0){
+									tpx.addSensorSampleCount(Constants.sensor_Accelerometer_linear,accl);
+									accl = 0;
 								}
 								if(ori!=0){
 									tpx.addSensorSampleCount(Constants.sensor_Orientation, ori);
@@ -117,9 +125,13 @@ public class ParticipantHelper {
 					}else{
 						if(tpx!=null){	
 							Participant help = tpx;
-							if(acc!=0){
-								tpx.addSensorSampleCount(Constants.sensor_Accelerometer,acc);
-								acc = 0;
+							if(accr!=0){
+								tpx.addSensorSampleCount(Constants.sensor_Accelerometer,accr);
+								accr = 0;
+							}
+							if(accl!=0){
+								tpx.addSensorSampleCount(Constants.sensor_Accelerometer_linear,accl);
+								accl = 0;
 							}
 							if(ori!=0){
 								tpx.addSensorSampleCount(Constants.sensor_Orientation, ori);

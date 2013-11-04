@@ -59,11 +59,16 @@
             android:name="bzzzt02.infos.SensorList"
             android:label="@string/app_name" >
         </activity>
+         <activity
+            android:name="bzzzt02.activities.RecordingHold"
+            android:label="@string/app_name" >
+        </activity>
         <service android:name="bzzzt02.services.RecordingService">
             <intent-filter>
                  <action android:name="NEWTP" />
                  <action android:name="startRecording" />
                  <action android:name="stopRecording" />
+                 <action android:name="logRecordingHold" />
             </intent-filter>
         </service>
     </application>

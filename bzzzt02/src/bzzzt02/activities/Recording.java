@@ -117,21 +117,25 @@ public class Recording extends Activity {
 		tv_tpIndex.setText(tpIndex);
 		tv_sampleIndex.setText(sampleIndex + "/"+Integer.toString(maxSamples));
 		startRinging();
-		// TODO End ringing
 		startService(new Intent("startRecording"));
 		sendBroadcast(new Intent("stopTimer"));
 	}
 	
 	public void startRinging(){
+		Log.d(TAG, "start ringing");
 		r.play();
 	}
 	
 	public void stopRinging(){
+		Log.d(TAG, "stop ringing");
 		r.stop();
 	}
-	public void btn_stopRecording(View view){
-		Intent itn = new Intent("stopRecording");
+	public void btn_startRecordingHold(View view){
+		Intent itn = new Intent("logRecordingHold");
 		startService(itn);
+		itn = new Intent(this, RecordingHold.class);
+		IntentHelper.addTPInfo2Intent(itn, tpIndex, sampleIndex);
+		startActivity(itn);
 	}
 	
 	public void loadConfig(){

@@ -159,5 +159,15 @@ public class Orientation extends BzzztSensor implements SensorEventListener {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public void logHoldState() {
+		try {
+			bwriter.append("//enter Holdstate at: "+ParticipantHelper.getTimeStamp()+"\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 }
