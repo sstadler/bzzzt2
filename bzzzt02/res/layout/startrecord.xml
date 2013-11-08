@@ -3,58 +3,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="16dp"
-        android:layout_y="18dp"
-        android:text="Bzzzt 2.0 -Train"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <Button
         android:id="@+id/btn_startRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="80dp"
-        android:layout_y="173dp"
+        android:layout_x="34dp"
+        android:layout_y="229dp"
         android:onClick="btn_startRecord"
-        android:text="startRecord" />
+        android:text="PUSH ME"
+        android:textSize="55dp" />
 
-    <TextView
-        android:id="@+id/tv_labelsampleindex"
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="18dp"
-        android:layout_y="115dp"
-        android:text="sample: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_x="248dp"
+        android:layout_y="388dp"
+        android:src="@drawable/pictfemale" />
 
-    <TextView
-        android:id="@+id/tv_sampleindex"
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="91dp"
-        android:layout_y="108dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_x="0dp"
+        android:layout_y="388dp"
+        android:src="@drawable/pictmale" />
 
     <TextView
         android:id="@+id/tv_tplabelindex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="17dp"
-        android:layout_y="73dp"
-        android:text="Participant index: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_x="80dp"
+        android:layout_y="413dp"
+        android:text="Index: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="40dp" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="88dp"
+        android:layout_y="38dp"
+        android:text="Training"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="40dp" />
+
+    <TextView
+        android:id="@+id/tv_sampleindex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="134dp"
+        android:layout_y="111dp"
+        android:text="0/0"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="40sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_tpindex"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:layout_x="192dp"
+        android:layout_y="412dp"
+        android:text="000"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="40dp" />
+
+    <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="165dp"
-        android:layout_y="74dp"
-        android:text="Medium Text"
+        android:layout_x="112dp"
+        android:layout_y="195dp"
+        android:text="NEW ROUND"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </AbsoluteLayout>

@@ -18,9 +18,12 @@ public class IntentHelper {
 			for(int i=0; i<vals.length;i++){
 				Log.d(TAG,"i: "+vals[i]);
 				switch(i){
-					case(0):itn.putExtra("x", vals[i]);break;
-					case(1):itn.putExtra("y", vals[i]);break;
-					case(2):itn.putExtra("z", vals[i]);break;
+					case(0):itn.putExtra("xaccR", vals[i]);break;
+					case(1):itn.putExtra("yaccR", vals[i]);break;
+					case(2):itn.putExtra("zaccR", vals[i]);break;
+					case(3):itn.putExtra("xaccL", vals[i]);break;
+					case(4):itn.putExtra("yaccL", vals[i]);break;
+					case(5):itn.putExtra("zaccL", vals[i]);break;
 					default: break;
 				}
 			}

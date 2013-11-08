@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import android.hardware.Sensor;
@@ -35,7 +34,9 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer, mAccelerometerLinear;
-	private float mLastX, mLastY, mLastZ;
+	private float mLastXaccR, mLastYaccR, mLastZaccR;
+	private float mLastXaccL, mLastYaccL, mLastZaccL;
+	
 	private int cntEntries = 0;
 	private boolean finished = false;
 	private boolean movement = false;
@@ -87,9 +88,12 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	public void initParams() {
 		errors = new ArrayList<String>();
 		indexSample = 0;
-		mLastX = 0.0f;
-		mLastY = 0.0f;
-		mLastZ = 0.0f;
+		mLastXaccR = 0.0f;
+		mLastYaccR = 0.0f;
+		mLastZaccR = 0.0f;
+		mLastXaccL = 0.0f;
+		mLastYaccL = 0.0f;
+		mLastZaccL = 0.0f;
 	}
 
 	@Override
@@ -247,10 +251,16 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 		switch(event.sensor.getType()){
 		case Sensor.TYPE_ACCELEROMETER:
 			writeData(event.values, RAW);
+			mLastXaccR = x;
+			mLastYaccR = y;
+			mLastZaccR = z;
 			Log.d(TAG, "raw: "+x+" "+y+" "+z);
 			break;
 		case Sensor.TYPE_LINEAR_ACCELERATION:
 			writeData(event.values, LINEAR);
+			mLastXaccL = x;
+			mLastYaccL = y;
+			mLastZaccL = z;
 			Log.d(TAG,"Linear: "+x+" "+y+" "+z);
 			break;
 		}
@@ -258,9 +268,8 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 //		writeData(x, y, z);
 //		hold.add(ac);
 //		
-//		mLastX = x;
-//		mLastY = y;
-//		mLastZ = z;
+
+
 //		cntEntries++;
 //		Log.d(TAG, "cntEnt: "+cntEntries);
 //		if(hold.size()==5){
@@ -299,8 +308,33 @@ public class Accelerometer extends BzzztSensor implements SensorEventListener{
 	}
 
 	@Override
-	public String[] getSensorValues() {
-		String[] a = {String.valueOf(mLastX), String.valueOf(mLastY), String.valueOf(mLastZ)};
+	public String[] getSensorValues(int type) {
+		String[] a = {"0.0","0.0","0.0","0.0","0.0","0.0"}; 			
+		switch(type){
+		case RAW:
+			a[0] = String.valueOf(mLastXaccR);
+			a[1] = String.valueOf(mLastYaccR);
+			a[2] = String.valueOf(mLastZaccR);
+			break;
+		case LINEAR:
+			a[0] = String.valueOf(mLastXaccL);
+			a[1] = String.valueOf(mLastYaccL);
+			a[2] = String.valueOf(mLastZaccL);
+			break;
+		case RAW_AND_LINEAR:
+			a[0] = String.valueOf(mLastXaccR);
+			a[1] = String.valueOf(mLastYaccR);
+			a[2] = String.valueOf(mLastZaccR);
+			a[3] = String.valueOf(mLastXaccL);
+			a[4] = String.valueOf(mLastYaccL);
+			a[5] = String.valueOf(mLastZaccL);
+			break;
+		default:
+			a[0] = "0.0";
+			a[1] = "0.0";
+			a[2] = "0.0";
+		}
+		
 		return a;
 	}
 

@@ -30,7 +30,7 @@ public class RecordingHold extends Activity {
 
 	Participant tp;
 	String tpIndex,	sampleIndex;
-	TextView tv_tpIndex,tv_sampleIndex, tv_accx, tv_accy,tv_accz;
+	TextView tv_tpIndex,tv_sampleIndex, tv_recording;
 	private ConfigData config;
 	private File externalStorageDir;
 	private String downloadDir;
@@ -38,7 +38,7 @@ public class RecordingHold extends Activity {
 	private CountDown rcd;
 	private Vibrator vib;// Needed service vibrator
 	Ringtone r;
-	private int timeCD = 10;
+	private int vibtime;
 	
 	private BroadcastReceiver serviceReceiver = new BroadcastReceiver() {
 
@@ -51,17 +51,10 @@ public class RecordingHold extends Activity {
 				rcd.cancel();
 			}
 			
-//			if(intent.getAction().equals("stopRinging")){
-//				stopRinging();
-//				return;
-//			}
-			
 			if(intent.getAction().equals("accData")){
-				tv_accx.setText(intent.getStringExtra("x"));
-				tv_accy.setText(intent.getStringExtra("y"));
-				tv_accz.setText(intent.getStringExtra("z"));
-				Log.d(TAG, "x: "+intent.getStringExtra("x"));
-				if(intent.getStringExtra("x").isEmpty()){tv_accx.setText("null");}
+//				tv_accx.setText(intent.getStringExtra("xaccR"));
+//				tv_accy.setText(intent.getStringExtra("yaccR"));
+//				tv_accz.setText(intent.getStringExtra("zaccR"));
 				return;
 			}
 
@@ -86,19 +79,17 @@ public class RecordingHold extends Activity {
 		tp = null;
 		Log.d(TAG, "... create" + TAG);
 		IntentFilter intentFilter = new IntentFilter();
-		//intentFilter.addAction("startActivityEndTurn");
-		//intentFilter.addAction("startActivityRecording");
 		intentFilter.addAction("accData");
 		intentFilter.addAction("stopRecording");
-		//intentFilter.addAction("stopRinging");
 		registerReceiver(serviceReceiver, intentFilter);
 		loadConfig();
 		maxSamples = config.getMaxNumberSample();
 		tv_tpIndex = (TextView) findViewById(R.id.tv_tpindex);
+		tv_tpIndex.bringToFront();
 		tv_sampleIndex = (TextView) findViewById(R.id.tv_sampleindex);
-		tv_accx = (TextView) findViewById(R.id.tv_x);
-		tv_accy = (TextView) findViewById(R.id.tv_y);
-		tv_accz = (TextView) findViewById(R.id.tv_z);
+		tv_sampleIndex.bringToFront();
+		tv_recording = (TextView) findViewById(R.id.tv_recording);
+		vibtime = config.getVibInSec();
 		vib = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 	}
 
@@ -122,8 +113,8 @@ public class RecordingHold extends Activity {
 		tv_sampleIndex.setText(sampleIndex + "/"+Integer.toString(maxSamples));
 		Intent itn2 = new Intent("stopRinging");
 		sendBroadcast(itn2);
-		vib.vibrate(timeCD*1000);
-		rcd = new CountDown(timeCD*1000, 1000, tpIndex, sampleIndex);
+		vib.vibrate(vibtime*1000);
+		rcd = new CountDown(vibtime*1000, 1000, tpIndex, sampleIndex);
 		rcd.start();
 		// TODO startVibriation
 		//startService(new Intent("startRecording"));
@@ -161,6 +152,11 @@ public class RecordingHold extends Activity {
 		public void onTick(long millisecUntilFinished) {
 			//tv_timer.setText(Long.toString(millisecUntilFinished / 1000));
 			System.out.println("TICK-----------------------------------------"+Long.toString(millisecUntilFinished / 1000));
+			if((millisecUntilFinished/1000)%2==1){
+				tv_recording.setVisibility(View.VISIBLE);
+			}else{
+				tv_recording.setVisibility(View.INVISIBLE);
+			}
 		}
 	}
 	

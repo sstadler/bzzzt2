@@ -8,7 +8,7 @@ import bzzzt02.global.Constants;
 
 public class ConfigObject {
 	
-	private List<String> lstValidParamNames = Arrays.asList(Constants.config_DEBUG,Constants.config_TPFOLDERPATH,Constants.config_FILEPREFIX);
+	private List<String> lstValidParamNames = Arrays.asList(Constants.config_DEBUG,Constants.config_TPFOLDERPATH,Constants.config_FILEPREFIX, Constants.config_WAITINSEC);
 	
 	public String name;
 	public Object val;
@@ -77,6 +77,9 @@ public class ConfigObject {
 		}
 		
 		else if(name.equals(Constants.config_WAITINSEC)){
+			processed = true;
+		}
+		else if(name.equals(Constants.config_VIBTIME)){
 			processed = true;
 		}
 		else{

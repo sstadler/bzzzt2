@@ -44,7 +44,7 @@ public abstract class BzzztSensor {
 	public abstract boolean checkFinished();
 	public abstract boolean checkMovement();
 	public abstract void stopRecord();
-	public abstract String[] getSensorValues();
+	public abstract String[] getSensorValues(int type);
 	public abstract void logHoldState();
 	
 	public BzzztSensor(){

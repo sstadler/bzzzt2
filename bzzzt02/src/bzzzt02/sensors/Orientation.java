@@ -155,7 +155,7 @@ public class Orientation extends BzzztSensor implements SensorEventListener {
 		
 	}
 	@Override
-	public String[] getSensorValues() {
+	public String[] getSensorValues(int type) {
 		// TODO Auto-generated method stub
 		return null;
 	}

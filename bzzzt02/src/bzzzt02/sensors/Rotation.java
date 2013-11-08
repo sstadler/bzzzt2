@@ -351,7 +351,7 @@ public class Rotation extends BzzztSensor implements SensorEventListener {
 	}
 
 	@Override
-	public String[] getSensorValues() {
+	public String[] getSensorValues(int type) {
 		return null;
 	}
 

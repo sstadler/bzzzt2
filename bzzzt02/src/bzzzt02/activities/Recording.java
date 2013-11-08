@@ -47,11 +47,11 @@ public class Recording extends Activity {
 			}
 			
 			if(intent.getAction().equals("accData")){
-				tv_accx.setText(intent.getStringExtra("x"));
-				tv_accy.setText(intent.getStringExtra("y"));
-				tv_accz.setText(intent.getStringExtra("z"));
-				Log.d(TAG, "x: "+intent.getStringExtra("x"));
-				if(intent.getStringExtra("x").isEmpty()){tv_accx.setText("null");}
+//				tv_accx.setText(intent.getStringExtra("x"));
+//				tv_accy.setText(intent.getStringExtra("y"));
+//				tv_accz.setText(intent.getStringExtra("z"));
+//				Log.d(TAG, "x: "+intent.getStringExtra("x"));
+//				if(intent.getStringExtra("x").isEmpty()){tv_accx.setText("null");}
 				return;
 			}
 

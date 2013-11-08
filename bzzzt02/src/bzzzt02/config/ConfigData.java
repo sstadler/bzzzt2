@@ -85,6 +85,9 @@ public class ConfigData {
 	public int getWaitInSec(){
 		return Integer.valueOf(getValue(Constants.config_WAITINSEC).toString());
 	}
+	public int getVibInSec(){
+		return Integer.valueOf(getValue(Constants.config_VIBTIME).toString());
+	}
 
 	private void displayErrorList() {
 		Iterator<String> i = errors.iterator();

@@ -7,111 +7,74 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="16dp"
-        android:layout_y="18dp"
-        android:text="Bzzzt 2.0 -Train"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/tv_labelsampleindex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="18dp"
-        android:layout_y="115dp"
-        android:text="sample: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_x="88dp"
+        android:layout_y="38dp"
+        android:text="Training"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="40dp" />
 
     <TextView
         android:id="@+id/tv_sampleindex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="91dp"
-        android:layout_y="108dp"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_x="134dp"
+        android:layout_y="111dp"
+        android:text="0/0"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="40sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_tplabelindex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="17dp"
-        android:layout_y="73dp"
-        android:text="Participant index: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_x="80dp"
+        android:layout_y="413dp"
+        android:text="Index: "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="40dp" />
 
     <TextView
         android:id="@+id/tv_tpindex"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:layout_x="220dp"
+        android:layout_y="413dp"
+        android:text="000"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="40dp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="165dp"
-        android:layout_y="74dp"
-        android:text=""
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_x="0dp"
+        android:layout_y="389dp"
+        android:src="@drawable/pictfemale" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="248dp"
+        android:layout_y="389dp"
+        android:src="@drawable/pictmale" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="116dp"
+        android:layout_height="116dp"
+        android:layout_x="110dp"
+        android:layout_y="179dp"
+        android:src="@drawable/record" />
 
     <TextView
         android:id="@+id/tv_recording"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_x="87dp"
-        android:layout_y="205dp"
-        android:text="Recording Hold"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-
-    <TextView
-        android:id="@+id/tv_labelaccdata"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="20dp"
-        android:layout_y="150dp"
-        android:text="accelerometer" />
-
-    <TextView
-        android:id="@+id/tv_labelx"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="120dp"
-        android:layout_y="150dp"
-        android:text="x:" />
-
-    <TextView
-        android:id="@+id/tv_labely"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="120dp"
-        android:layout_y="165dp"
-        android:text="y:" />
-
-    <TextView
-        android:id="@+id/tv_labelz"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="120dp"
-        android:layout_y="180dp"
-        android:text="z:" />
-
-    <TextView
-        android:id="@+id/tv_x"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="140dp"
-        android:layout_y="150dp"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/tv_y"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="140dp"
-        android:layout_y="165dp"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/tv_z"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_x="140dp"
-        android:layout_y="180dp"
-        android:text="" />
+        android:layout_x="121dp"
+        android:layout_y="312dp"
+        android:text="RECORDING"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </AbsoluteLayout>

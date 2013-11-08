@@ -7,6 +7,7 @@ public class Constants {
 	public static final String config_FILEPREFIX       = "filePrefix";
 	public static final String config_MAXNUMBERSAMPLES = "maxNumberSamples";
 	public static final String config_WAITINSEC        = "waitInSec";
+	public static final String config_VIBTIME          = "vibInSec";
 	
 	public static final String regex_true       = "true";
 	public static final String regex_false      = "false";

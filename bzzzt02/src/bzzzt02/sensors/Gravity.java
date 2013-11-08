@@ -152,7 +152,7 @@ public class Gravity extends BzzztSensor implements SensorEventListener {
 				SensorManager.SENSOR_DELAY_NORMAL);
 	}
 	@Override
-	public String[] getSensorValues() {
+	public String[] getSensorValues(int type) {
 		return null;
 	}
 

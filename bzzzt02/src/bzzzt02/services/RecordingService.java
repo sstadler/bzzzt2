@@ -11,10 +11,7 @@ import bzzzt02.sensors.Rotation;
 
 import android.app.Service;
 
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 
 import android.os.Environment;
@@ -81,7 +78,7 @@ public class RecordingService extends Service{
 //							sendBroadcast(new Intent("stopRinging"));
 //							movement=false;
 //						}
-						String[] vals = tp.sensors.get(Constants.sensor_Accelerometer).getSensorValues();
+						String[] vals = tp.sensors.get(Constants.sensor_Accelerometer).getSensorValues(Accelerometer.RAW_AND_LINEAR);
 						sendBroadcast(IntentHelper.generateSensorValIntent(Constants.sensor_Accelerometer, vals));
 
 					} catch (InterruptedException e) {
@@ -92,6 +89,7 @@ public class RecordingService extends Service{
 				    }
 				    int sampleIndex = tp.sensors.get(Constants.sensor_Accelerometer).getSampleIndex();
 				    Intent itn = new Intent();
+				    Intent itnData = null;
 					if(sampleIndex<= maxSamples){
 						if(finished){
 							tp.sensors.get(Constants.sensor_Accelerometer).closeFile();
@@ -102,6 +100,7 @@ public class RecordingService extends Service{
 							if(sampleIndex< maxSamples){
 								itn = new Intent("startActivityRecording");
 								itn = IntentHelper.addTPInfo2Intent(itn, Integer.toString(tp.indexTP), Integer.toString(sampleIndex+1));
+								itnData = IntentHelper.generateSensorValIntent(Constants.sensor_Accelerometer, tp.sensors.get(Constants.sensor_Accelerometer).getSensorValues(Accelerometer.RAW_AND_LINEAR));
 							}
 							if(sampleIndex==maxSamples){
 								tp.sensors.get(Constants.sensor_Accelerometer).resetSampleIndex();
@@ -111,6 +110,9 @@ public class RecordingService extends Service{
 						}	
 					}
 					else{itn= new Intent("startActivityEndTurn");}
+					if(itnData!=null){
+						sendBroadcast(itnData);
+					}
 					sendBroadcast(itn);
 					finished = false;
 

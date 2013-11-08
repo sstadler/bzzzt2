@@ -43,6 +43,8 @@ public class BzzztTimer extends Activity {
 
 		tv_tpIndex = (TextView) findViewById(R.id.tv_tpindex);
 		tv_sampleIndex = (TextView) findViewById(R.id.tv_sampleindex);
+		tv_tpIndex.bringToFront();
+		tv_sampleIndex.bringToFront();
  
 	}
 
